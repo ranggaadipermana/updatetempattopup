@@ -3,100 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Google Sheets</title>
-  <!-- Tambahkan Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Responsive Timeline</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
     }
 
-    .timeline {
-      position: relative;
-      padding: 2rem 0;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 100%;
-      background: #007bff;
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
     }
 
     .timeline-item {
+      display: grid;
+      grid-template-columns: 80px auto;
+      grid-template-rows: auto;
+      gap: 10px;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px 0;
       position: relative;
-      margin-bottom: 2rem;
     }
 
-    .timeline-item .timeline-img {
+    .timeline-item:before {
+      content: '';
       position: absolute;
       top: 0;
-      left: 50%;
-      transform: translate(-50%, 0);
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background-color: #fff;
-      border: 4px solid #007bff;
-      overflow: hidden;
-    }
-
-    .timeline-item .timeline-img img {
-      width: 100%;
+      left: 40px;
+      width: 4px;
       height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
+      background-color: #007bff;
+      z-index: 0;
     }
 
-    .timeline-item .timeline-content {
-      padding: 1rem;
-      background: #f8f9fa;
+    .timeline-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      z-index: 1;
+      grid-row: span 2;
+    }
+
+    .timeline-item .content {
+      padding: 10px;
+      background: white;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
     }
 
-    .timeline-item:nth-child(even) .timeline-content {
-      margin-left: auto;
-      text-align: right;
+    .timeline-item .content h5 {
+      margin: 0;
+      font-size: 1.2em;
     }
 
-    .timeline-item:nth-child(odd) .timeline-content {
-      margin-right: auto;
-      text-align: left;
+    .timeline-item .content p {
+      margin: 5px 0;
+      font-size: 0.9em;
     }
 
     @media (max-width: 768px) {
-      .timeline::before {
-        left: 20px;
-        transform: none;
-      }
-
       .timeline-item {
-        padding-left: 60px;
+        grid-template-columns: auto;
+        grid-template-rows: auto auto;
       }
 
-      .timeline-item .timeline-img {
-        left: 20px;
-        transform: none;
+      .timeline-item img {
+        justify-self: center;
+        grid-row: 1;
       }
 
-      .timeline-item .timeline-content {
-        margin: 0;
-        text-align: left;
+      .timeline-item .content {
+        grid-row: 2;
+        text-align: center;
+      }
+
+      .timeline-item:before {
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">Daftar Artikel</h1>
-    <div class="timeline" id="articles"></div>
-  </div>
+  <div class="timeline-container" id="articles"></div>
 
   <script>
     async function fetchArticles() {
@@ -108,15 +105,13 @@
       const articles = await fetchArticles();
       const container = document.getElementById('articles');
 
-      articles.forEach((article, index) => {
+      articles.forEach(article => {
         const timelineItem = document.createElement('div');
         timelineItem.className = 'timeline-item';
 
         timelineItem.innerHTML = `
-          <div class="timeline-img">
-            ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="">` : ''}
-          </div>
-          <div class="timeline-content">
+          <img src="${article['URL Gambar'] || 'https://via.placeholder.com/60'}" alt="Image">
+          <div class="content">
             <h5>${article['Judul Artikel']}</h5>
             <p><small>${article['Tanggal'] || ''}</small></p>
             <p>${article['Konten Artikel'].substring(0, 100)}...</p>
@@ -129,8 +124,5 @@
 
     displayArticles();
   </script>
-
-  <!-- Tambahkan Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
