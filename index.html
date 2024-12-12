@@ -30,49 +30,48 @@
     }
 
     async function displayArticles() {
-      const articles = await fetchArticles();
-      const container = document.getElementById('articles');
-      const articleId = getQueryParam('id');
+  const articles = await fetchArticles();
+  const container = document.getElementById('articles');
+  const articleId = getQueryParam('id');
 
-      if (articleId) {
-        // Halaman artikel tertentu
-        const article = articles.find(a => a['ID'] === articleId);
-        if (article) {
-          container.innerHTML = `
-            <div class="col-12">
-              <div class="card">
-                ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" class="card-img-top" alt="Image">` : ''}
-                <div class="card-body">
-                  <h2 class="card-title">${article['Judul Artikel']}</h2>
-                  <p class="card-text">${article['Konten Artikel']}</p>
-                </div>
-              </div>
+  if (articleId) {
+    // Pastikan artikelId adalah string atau angka yang benar
+    const article = articles.find(a => a['ID'].toString() === articleId.toString()); // Periksa ID dengan konversi ke string
+    if (article) {
+      container.innerHTML = `
+        <div class="col-12">
+          <div class="card">
+            ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" class="card-img-top" alt="Image">` : ''}
+            <div class="card-body">
+              <h2 class="card-title">${article['Judul Artikel']}</h2>
+              <p class="card-text">${article['Konten Artikel']}</p>
             </div>
-          `;
-          document.getElementById('page-title').innerText = article['Judul Artikel'];
-          document.getElementById('back').style.display = 'inline-block';
-        } else {
-          container.innerHTML = '<p>Artikel tidak ditemukan.</p>';
-        }
-      } else {
-        // Halaman daftar artikel
-        articles.forEach(article => {
-          const articleDiv = document.createElement('div');
-          articleDiv.className = 'col-md-4 col-sm-6 col-12';
-          articleDiv.innerHTML = `
-            <div class="card h-100">
-              ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" class="card-img-top" alt="Image">` : ''}
-              <div class="card-body">
-                <h5 class="card-title"><a href="?id=${article['ID']}" class="text-decoration-none">${article['Judul Artikel']}</a></h5>
-                <p class="card-text">${article['Konten Artikel'].substring(0, 100)}...</p>
-              </div>
-            </div>
-          `;
-          container.appendChild(articleDiv);
-        });
-      }
+          </div>
+        </div>
+      `;
+      document.getElementById('page-title').innerText = article['Judul Artikel'];
+      document.getElementById('back').style.display = 'inline-block';
+    } else {
+      container.innerHTML = '<p>Artikel tidak ditemukan.</p>';
     }
-
+  } else {
+    // Halaman daftar artikel
+    articles.forEach(article => {
+      const articleDiv = document.createElement('div');
+      articleDiv.className = 'col-md-4 col-sm-6 col-12';
+      articleDiv.innerHTML = `
+        <div class="card h-100">
+          ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" class="card-img-top" alt="Image">` : ''}
+          <div class="card-body">
+            <h5 class="card-title"><a href="?id=${article['ID']}" class="text-decoration-none">${article['Judul Artikel']}</a></h5>
+            <p class="card-text">${article['Konten Artikel'].substring(0, 100)}...</p>
+          </div>
+        </div>
+      `;
+      container.appendChild(articleDiv);
+    });
+  }
+}
     displayArticles();
   </script>
   <!-- Tambahkan Bootstrap JS -->
