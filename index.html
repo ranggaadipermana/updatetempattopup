@@ -59,17 +59,27 @@
       transform: translateX(50%);
     }
     .timeline-content img {
-      max-height: 200px;
-      object-fit: cover;
-      margin-bottom: 15px;
+      max-width: 200px;
+      height: auto;
       border-radius: 5px;
+    }
+    .content {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .content img {
+      margin-right: 20px;
+    }
+    .content-details {
+      flex: 1;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="my-4" id="page-title">Daftar Artikel</h1>
-    <a href="https://ranggaadipermana.github.io/updatetempattopup" id="back" class="btn btn-secondary mb-4" style="display:none;">← Kembali ke daftar artikel</a>
+    <h1 class="my-4" id="page-title">Timeline: Produk / Layanan Baru TempatTopup.com</h1>
+    <a href="/" id="back" class="btn btn-secondary mb-4" style="display:none;">← Kembali ke daftar artikel</a>
     <ul id="articles" class="timeline"></ul>
   </div>
 
@@ -95,9 +105,14 @@
           container.innerHTML = `
             <li class="timeline-item">
               <div class="timeline-content">
-                ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
-                <h2>${article['Judul Artikel']}</h2>
-                <p>${article['Konten Artikel']}</p>
+                <div class="content">
+                  ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
+                  <div class="content-details">
+                    <h2>${article['Judul Artikel']}</h2>
+                    <p><small>${article['Tanggal'] || ''}</small></p>
+                    <p>${article['Konten Artikel']}</p>
+                  </div>
+                </div>
               </div>
             </li>
           `;
@@ -112,9 +127,14 @@
           articleItem.className = 'timeline-item';
           articleItem.innerHTML = `
             <div class="timeline-content">
-              ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
-              <h5><a href="?id=${article['ID']}" class="text-decoration-none">${article['Judul Artikel']}</a></h5>
-              <p>${article['Konten Artikel'].substring(0, 100)}...</p>
+              <div class="content">
+                ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
+                <div class="content-details">
+                  <h5><a href="?id=${article['ID']}" class="text-decoration-none">${article['Judul Artikel']}</a></h5>
+                  <p><small>${article['Tanggal'] || ''}</small></p>
+                  <p>${article['Konten Artikel'].substring(0, 100)}...</p>
+                </div>
+              </div>
             </div>
           `;
           container.appendChild(articleItem);
