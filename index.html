@@ -4,44 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Website Google Sheets</title>
-  <!-- Tambahkan CSS Timeline dari CodyHouse -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/codyhouse/vertical-timeline@1.0.0/assets/css/style.css">
+  <!-- Tambahkan Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
     }
 
-    .cd-timeline__img {
-      background-color: #f8f9fa;
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: #007bff;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-item .timeline-img {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #fff;
+      border: 4px solid #007bff;
       overflow: hidden;
     }
 
-    .cd-timeline__img img {
+    .timeline-item .timeline-img img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 50%;
     }
 
-    .cd-timeline__content {
-      background: #fff;
+    .timeline-item .timeline-content {
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+    .timeline-item:nth-child(even) .timeline-content {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+      margin-right: auto;
+      text-align: left;
+    }
+
     @media (max-width: 768px) {
-      .cd-timeline__img {
-        width: 60px;
-        height: 60px;
+      .timeline::before {
+        left: 20px;
+        transform: none;
+      }
+
+      .timeline-item {
+        padding-left: 60px;
+      }
+
+      .timeline-item .timeline-img {
+        left: 20px;
+        transform: none;
+      }
+
+      .timeline-item .timeline-content {
+        margin: 0;
+        text-align: left;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="my-4 text-center">Daftar Artikel</h1>
-    <section class="cd-timeline js-cd-timeline">
-      <div id="articles" class="cd-timeline__container"></div>
-    </section>
+    <h1 class="text-center mb-4">Daftar Artikel</h1>
+    <div class="timeline" id="articles"></div>
   </div>
 
   <script>
@@ -54,26 +108,29 @@
       const articles = await fetchArticles();
       const container = document.getElementById('articles');
 
-      articles.forEach(article => {
-        const articleItem = document.createElement('div');
-        articleItem.className = 'cd-timeline__block';
-        articleItem.innerHTML = `
-          <div class="cd-timeline__img">
-            ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
+      articles.forEach((article, index) => {
+        const timelineItem = document.createElement('div');
+        timelineItem.className = 'timeline-item';
+
+        timelineItem.innerHTML = `
+          <div class="timeline-img">
+            ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="">` : ''}
           </div>
-          <div class="cd-timeline__content">
+          <div class="timeline-content">
             <h5>${article['Judul Artikel']}</h5>
             <p><small>${article['Tanggal'] || ''}</small></p>
             <p>${article['Konten Artikel'].substring(0, 100)}...</p>
           </div>
         `;
-        container.appendChild(articleItem);
+
+        container.appendChild(timelineItem);
       });
     }
 
     displayArticles();
   </script>
-  <!-- Tambahkan JS Timeline dari CodyHouse -->
-  <script src="https://cdn.jsdelivr.net/gh/codyhouse/vertical-timeline@1.0.0/assets/js/main.js"></script>
+
+  <!-- Tambahkan Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
