@@ -69,14 +69,16 @@
       }
       .timeline-item {
         flex-direction: column !important;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
       }
       .timeline-content {
         width: 90%;
-        margin-left: 40px;
+        margin: 0 auto;
       }
       .timeline-image {
-        left: 10%;
+        left: auto;
+        top: -40px;
         transform: translate(0, 0);
       }
     }
@@ -84,7 +86,7 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="my-4" id="page-title">Daftar Artikel</h1>
+    <h1 class="my-4" id="page-title">TimeLine TempatTopup.com</h1>
     <a href="/" id="back" class="btn btn-secondary mb-4" style="display:none;">← Kembali ke daftar artikel</a>
     <ul id="articles" class="timeline"></ul>
   </div>
@@ -115,7 +117,7 @@
               </div>
               <div class="timeline-content">
                 <h2>${article['Judul Artikel']}</h2>
-                <p><small>${article['Tanggal'] || ''}</small></p>
+                <p><small>${article['Tanggal Publikasi'] || ''}</small></p>
                 <p>${article['Konten Artikel']}</p>
               </div>
             </li>
