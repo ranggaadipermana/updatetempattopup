@@ -8,31 +8,62 @@
     body { font-family: Arial, sans-serif; margin: 20px; }
     .article { border-bottom: 1px solid #ccc; margin-bottom: 20px; padding-bottom: 20px; }
     .article img { max-width: 100%; height: auto; }
+    .back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: blue; }
   </style>
 </head>
 <body>
-  <h1>Daftar Artikel</h1>
+  <h1 id="page-title">Daftar Artikel</h1>
+  <a href="#" id="back" class="back-link" style="display:none;">← Kembali ke daftar artikel</a>
   <div id="articles"></div>
 
   <script>
     async function fetchArticles() {
       const response = await fetch('https://script.google.com/macros/s/AKfycbxqGtf1ZvG6d74_INM8frNwM5GBTlGMTTQHBAuViumDvPwg9CA8fbgwJgLIWIfJ8diI6A/exec');
-      const articles = await response.json();
-      
-      const container = document.getElementById('articles');
-      articles.forEach(article => {
-        const articleDiv = document.createElement('div');
-        articleDiv.className = 'article';
-        articleDiv.innerHTML = `
-          <h2>${article['Judul Artikel']}</h2>
-          <p>${article['Konten Artikel']}</p>
-          ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
-        `;
-        container.appendChild(articleDiv);
-      });
+      return await response.json();
     }
 
-    fetchArticles();
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    async function displayArticles() {
+      const articles = await fetchArticles();
+      const container = document.getElementById('articles');
+      const articleId = getQueryParam('id');
+
+      if (articleId) {
+        // Halaman artikel tertentu
+        const article = articles.find(a => a['ID'] === articleId); // Sesuaikan nama field ID dengan Google Sheets
+        if (article) {
+          container.innerHTML = `
+            <div class="article">
+              <h2>${article['Judul Artikel']}</h2>
+              <p>${article['Konten Artikel']}</p>
+              ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
+            </div>
+          `;
+          document.getElementById('page-title').innerText = article['Judul Artikel'];
+          document.getElementById('back').style.display = 'block';
+        } else {
+          container.innerHTML = '<p>Artikel tidak ditemukan.</p>';
+        }
+      } else {
+        // Halaman daftar artikel
+        articles.forEach(article => {
+          const articleDiv = document.createElement('div');
+          articleDiv.className = 'article';
+          articleDiv.innerHTML = `
+            <h2><a href="?id=${article['ID']}">${article['Judul Artikel']}</a></h2>
+            <p>${article['Konten Artikel'].substring(0, 100)}...</p> <!-- Potong konten -->
+            ${article['URL Gambar'] ? `<img src="${article['URL Gambar']}" alt="Image">` : ''}
+          `;
+          container.appendChild(articleDiv);
+        });
+      }
+    }
+
+    displayArticles();
   </script>
 </body>
 </html>
